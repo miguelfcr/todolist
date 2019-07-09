@@ -5,7 +5,7 @@ import PageHeader from '../template/pageHeader'
 import TodoForm from './todoForm'
 import TodoList from './todoList'
 
-const URL = 'http://localhost:3003/api/todos'
+const URL = 'http://localhost:5000/api/task'
 
 export default class Todo extends Component {
     constructor(props) {
@@ -25,8 +25,8 @@ export default class Todo extends Component {
     }
 
     refresh(description = '') {
-        const search = description ? `&description__regex=/${description}/` : ''
-        axios.get(`${URL}?sort=-createdAt${search}`)
+        const search = description ? `description=${description}` : ''
+        axios.get(`${URL}?${search}`)
             .then(resp => this.setState({...this.state, description, list: resp.data}))
     }
 
@@ -45,17 +45,17 @@ export default class Todo extends Component {
     }
 
     handleRemove(todo) {
-        axios.delete(`${URL}/${todo._id}`)
+        axios.delete(`${URL}/${todo.id}`)
             .then(resp => this.refresh(this.state.description))
     }
     
     handleMarkAsDone(todo) {
-        axios.put(`${URL}/${todo._id}`, { ...todo, done: true })
+        axios.put(`${URL}/${todo.id}`, { ...todo, done: true })
             .then(resp => this.refresh(this.state.description))
     }
 
     handleMarkAsPending(todo) {
-        axios.put(`${URL}/${todo._id}`, { ...todo, done: false })
+        axios.put(`${URL}/${todo.id}`, { ...todo, done: false })
             .then(resp => this.refresh(this.state.description))
     }
 

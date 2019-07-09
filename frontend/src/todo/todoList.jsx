@@ -6,7 +6,7 @@ export default props => {
     const renderRows = () => {
         const list = props.list || []
         return list.map(todo => (
-            <tr key={todo._id}>
+            <tr key={todo.id}>
                 <td className={todo.done ? 'markedAsDone' : ''}>{todo.description}</td>
                 <td>
                     <IconButton style='success' icon='check' hide={todo.done}

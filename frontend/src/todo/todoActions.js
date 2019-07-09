@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const URL = 'http://localhost:3003/api/todos'
+const URL = 'http://localhost:5000/api/task'
 
 export const changeDescription = event => ({
     type: 'DESCRIPTION_CHANGED',
@@ -10,8 +10,8 @@ export const changeDescription = event => ({
 export const search = () => {
     return (dispatch, getState) => {
         const description = getState().todo.description
-        const search = description ? `&description__regex=/${description}/` : ''
-        const request = axios.get(`${URL}?sort=-createdAt${search}`)
+        const search = description ? `description=${description}` : ''
+        const request = axios.get(`${URL}?${search}`)
             .then(resp => dispatch({type: 'TODO_SEARCHED', payload: resp.data}))
     }
 }
@@ -26,21 +26,21 @@ export const add = (description) => {
 
 export const markAsDone = (todo) => {
     return dispatch => {
-        axios.put(`${URL}/${todo._id}`, { ...todo, done: true })
+        axios.put(`${URL}/${todo.id}`, { ...todo, done: true })
             .then(resp => dispatch(search()))
     }
 }
 
 export const markAsPending = (todo) => {
     return dispatch => {
-        axios.put(`${URL}/${todo._id}`, { ...todo, done: false })
+        axios.put(`${URL}/${todo.id}`, { ...todo, done: false })
             .then(resp => dispatch(search()))
     }
 }
 
 export const remove = (todo) => {
     return dispatch => {
-        axios.delete(`${URL}/${todo._id}`)
+        axios.delete(`${URL}/${todo.id}`)
             .then(resp => dispatch(search()))
     }
 }
